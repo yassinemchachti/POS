@@ -83,7 +83,7 @@
             </button>
             <h5 class="fw-bold text-primary mb-3"><i class="bi bi-receipt-cutoff"></i> Résumé de la commande</h5>
             <div class="d-flex justify-content-between mb-2">
-                <span>Subtotal ({{ count($cartItems) }} items):</span>
+                <span>Sous-total ({{ count($cartItems) }} articles) :</span>
                 <span class="fw-semibold">{{$total}}</span>
             </div>
             <hr>
