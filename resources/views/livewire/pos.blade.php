@@ -66,7 +66,7 @@
                                 <img src="{{$article->photo }}" class="product-image" alt="{{ $article->designation }}">
                                 <h6 class="mt-3">{{ $article->designation }}</h6>
                                 <div class="price-tag">${{ number_format($article->prix_ht, 2) }}</div>
-                                <button class="btn btn-premium mt-3 w-100">Ajouter au panier</button>
+                                <button wire:click='addToPanier({{ $article->id }})' class="btn btn-premium mt-3 w-100">Ajouter au panier</button>
                             </div>
                         </div>           
                     @endforeach
@@ -78,10 +78,13 @@
 
         <!-- Right Side Checkout -->
         <div class="card shadow-sm p-4 rounded-4 w-100" style="max-width: 400px;">
+            <button wire:click="clear" class="btn btn-danger mb-3 w-100">
+                <i class="bi bi-trash"></i> Vider le panier
+            </button>
             <h5 class="fw-bold text-primary mb-3"><i class="bi bi-receipt-cutoff"></i> Order Summary</h5>
             <div class="d-flex justify-content-between mb-2">
-                <span>Subtotal (2 items):</span>
-                <span class="fw-semibold">$179.98</span>
+                <span>Subtotal ({{ count($cartItems) }} items):</span>
+                <span class="fw-semibold">{{$total}}</span>
             </div>
             <hr>
 
@@ -96,58 +99,52 @@
                     </tr>
                 </thead>
                 <tbody class="small">
-                    <tr>
-                        <td>Logotop Elite Pressure Cooker</td>
-                        <td>$129.99</td>
-                        <td>1</td>
-                        <td>$129.99</td>
-                    </tr>
-                    <tr>
-                        <td>Pro White Football</td>
-                        <td>$49.99</td>
-                        <td>1</td>
-                        <td>$49.99</td>
-                    </tr>
-                    <tr>
-                        <td>Pro White Football</td>
-                        <td>$49.99</td>
-                        <td>1</td>
-                        <td>$49.99</td>
-                    </tr>
-                    <tr>
-                        <td>Pro White Football</td>
-                        <td>$49.99</td>
-                        <td>1</td>
-                        <td>$49.99</td>
-                    </tr>
-                    <tr>
-                        <td>Pro White Football</td>
-                        <td>$49.99</td>
-                        <td>1</td>
-                        <td>$49.99</td>
-                    </tr>
+                    @foreach ($cartItems as $item)
+                        <tr>
+                            <td>{{ $item['name'] }}</td>
+                            <td>${{ number_format($item['price'], 2) }}</td>
+                            <td>{{ $item['quantity']}}</td>
+                            <td>${{ number_format($item['price'] * $item['quantity'], 2) }}</td>
+                        </tr>
+                    @endforeach
+            
                 </tbody>
             </table>
 
             <hr>
             <h6 class="fw-bold mb-2">Discount</h6>
             <div class="input-group mb-2">
-                <input type="number" class="form-control" placeholder="Discount value">
+                <input type="number" wire:model.live='discount' class="form-control" placeholder="Discount value">
                 <span class="input-group-text">DH / %</span>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="discountType" id="fixedDiscount" checked>
+                <input 
+                    class="form-check-input" 
+                    type="radio" 
+                    name="discountType" 
+                    id="fixedDiscount" 
+                    value="fixed"
+                    wire:model.live="typeDiscount"
+                >
                 <label class="form-check-label" for="fixedDiscount">Fixed</label>
             </div>
+            
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="discountType" id="percentageDiscount">
+                <input 
+                    class="form-check-input" 
+                    type="radio" 
+                    name="discountType" 
+                    id="percentageDiscount" 
+                    value="percentage"
+                    wire:model.live="typeDiscount"
+                >
                 <label class="form-check-label" for="percentageDiscount">Percentage</label>
             </div>
 
             <hr>
             <div class="d-flex justify-content-between fw-bold fs-5">
                 <span>Total:</span>
-                <span class="text-primary">$161.98</span>
+                <span class="text-primary">{{$totalWithDiscout}}</span>
             </div>
         </div>
 
