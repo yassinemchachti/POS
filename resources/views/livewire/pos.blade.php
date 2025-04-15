@@ -108,6 +108,9 @@
             @error('client_id')
                 <p class="text-danger mt-1">{{ $message }}</p>
             @enderror
+            @session('error')
+            <p class="text-danger mt-1">{{ session('error') }}</p>
+            @endsession()
             <h5 class="fw-bold text-primary mb-3"><i class="bi bi-receipt-cutoff"></i> Résumé de la commande</h5>
             <div class="d-flex justify-content-between mb-2">
                 <span>Sous-total ({{ count($cartItems) }} articles) :</span>
@@ -128,6 +131,14 @@
 
                 </thead>
                 <tbody class="small">
+                
+                       
+               
+                    @if (empty($cartItems))
+                        <tr>
+                            <td colspan="5" class="text-center">Aucun produit dans le panier.</td>
+                        </tr>
+                    @endif
                     @foreach ($cartItems as $item)
                         <tr>
                             <td>{{ $item['name'] }}</td>

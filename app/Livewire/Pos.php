@@ -59,6 +59,11 @@ class Pos extends Component
             'date' => now(),
         ]);
         $cartItems = $cart->getCart();
+
+        if (empty($cartItems)) {
+            session()->flash('error', 'Le panier est vide. Veuillez ajouter des articles avant de sauvegarder.');
+            return;
+        }
         foreach ($cartItems as $item) {
             DetailBL::create([
                 'article_id' => $item['id'],
