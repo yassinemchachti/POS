@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Commande;
 use Illuminate\Support\Facades\Session;
 
 class Cart
@@ -51,4 +52,6 @@ class Cart
         $cart = Session::get($this->cartKey, []);
         return array_reduce($cart, fn($sum, $item) => $sum + ($item['price'] * $item['quantity']), 0);
     }
+
+
 }

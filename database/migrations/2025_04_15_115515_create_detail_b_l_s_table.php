@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('commande_id')->constrained('commandes')->onDelete('cascade');
             $table->foreignId('article_id')->constrained('articles')->onDelete('cascade');
             $table->double('qnt');
+            $table->double('prix_ht');
             $table->double('tva');
             $table->double('remise');
             $table->timestamps();

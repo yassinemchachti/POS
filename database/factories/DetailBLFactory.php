@@ -21,6 +21,7 @@ class DetailBLFactory extends Factory
             'article_id' => \App\Models\Article::inRandomOrder()->first()->id ?? \App\Models\Article::factory(),
             'qnt' => $this->faker->numberBetween(1, 10),
             'tva' => $this->faker->randomElement([7, 10, 20]),
+            'prix_ht' => $this->faker->randomFloat(2, 1, 100),
             'remise' => $this->faker->randomFloat(2, 0, 30),
         ];
     }

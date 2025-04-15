@@ -146,7 +146,14 @@
                 <span>Total:</span>
                 <span class="text-primary">{{$totalWithDiscout}}</span>
             </div>
+            <div class="d-flex justify-content-end mt-4">
+                <button wire:click="saveCart" class="btn btn-success">
+                    <i class="bi bi-save"></i> Enregistrer
+                </button>
+            </div>
         </div>
+
+      
 
 
     </div>

@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\Article;
+use App\Models\Commande;
+use App\Models\DetailBL;
 use App\Models\Famille;
 use App\Models\User;
 use App\Services\Cart;
@@ -23,7 +25,34 @@ class Pos extends Component
     public $typeDiscount = 'fixed';
     public $discount = 0;
 
- 
+    public function saveCart()
+    {
+        $cart = new Cart();
+        $remise=$this->typeDiscount=='percentage' ? round(($cart->total() * (floatval($this->discount) / 100))) :  $this->discount;
+        $commande = Commande::create([
+            'user_id' => $this->client_id,
+            'remise' => $remise,
+            'date' => now(),
+        ]);
+        $cartItems = $cart->getCart();
+        foreach ($cartItems as $item) {
+           DetailBL::create([
+                'article_id' => $item['id'],
+                'commande_id' => $commande->id,
+                'qnt' => $item['quantity'],
+                'prix_ht' => $item['price'],
+                'tva' => 20,
+                'remise' => $remise,
+            ]);
+        }
+        $cart->clear();
+        $this->reset('client_id');
+        $this->reset('discount');
+        $this->reset('typeDiscount');
+        $this->reset('famille_id');
+        $this->reset('search');
+        session()->flash('success', 'Commande enregistrée avec succès !');
+    }
 
     public function addToPanier($article_id)
     {
@@ -53,7 +82,7 @@ class Pos extends Component
     public function render()
     {
         $familles = Famille::all();
-        $clients = User::where('is_client', true)->get();
+        $clients = User::all();
         $articles = Article::when($this->famille_id, function ($query) {
             $query->where('famille_id', $this->famille_id);
         })
