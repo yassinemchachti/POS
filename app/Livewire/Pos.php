@@ -112,7 +112,7 @@ class Pos extends Component
             $query->where('famille_id', $this->famille_id);
         })
             ->where('designation', 'like', '%' . $this->search . '%')
-            ->paginate(5);
+            ->paginate(8);
         $cart = new Cart();
         $cartItems = $cart->getCart();
         $total = $cart->total();
