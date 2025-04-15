@@ -29,7 +29,7 @@
                         aria-describedby="button-addon2">
                     <button class="btn btn-outline-secondary" type="button" id="button-addon2"><i
                             class="bi bi-search"></i></button>
-                    <select id="client-select" wire:model='client_id' class="form-select ms-2"
+                    <select id="client-select" wire:model.live='client_id' class="form-select ms-2"
                         style="max-width: 200px;">
                         <option value="">Sélectionner un client</option>
                         @foreach ($clients as $client)
