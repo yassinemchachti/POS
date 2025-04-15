@@ -21,7 +21,10 @@ class Pos extends Component
         $this->resetPage();
         $this->famille_id = $famille_id;
 
-        
+    }
+    public function updatedSearch()
+    {
+        $this->resetPage();
     }
     public function render()
     {
