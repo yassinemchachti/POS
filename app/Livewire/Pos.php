@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Article;
 use App\Models\Famille;
 use App\Models\User;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,8 +13,11 @@ class Pos extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
+    // #[WithPagination('articles')]
+    #[Url(as:'famille')]
     public $famille_id=null;
     public $client_id;
+    #[Url()]
     public $search='';
 
     public function filterByFamille($famille_id=null)
