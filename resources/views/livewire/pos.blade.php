@@ -1,5 +1,5 @@
 <div>
-    <nav class="navbar navbar-expand-lg navbar-dark py-3">
+    <nav class="navbar navbar-expand-lg navbar-dark py-3 mb-2">
         <div class="container">
             <a class="navbar-brand fw-bold fs-4" href="#">
                 <i class="bi bi-basket3-fill nav-icon"></i>BlueMart Pro
@@ -17,7 +17,7 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="dropdown">
+                {{-- <div class="dropdown">
                     <button class="btn btn-link text-white" type="button">
                         <i class="bi bi-person-circle nav-icon"></i>
                     </button>
@@ -28,7 +28,7 @@
                         <span
                             class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
                     </button>
-                </div>
+                </div> --}}
             </div>
         </div>
     </nav>
@@ -40,7 +40,7 @@
         <div class="col-lg-9">
 
             <div class="department-nav mb-4 mx-4">
-                <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-filter-circle nav-icon"></i>Shop Departments</h5>
+                <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-filter-circle nav-icon"></i>Familles</h5>
                 <div class="d-flex flex-wrap gap-2">
                     <button  wire:click='filterByFamille()' class="badge bg-primary text-white rounded-pill p-3 d-flex align-items-center">
                         <i class="bi bi-house-door me-2"></i>All
@@ -77,11 +77,11 @@
         </div>
 
         <!-- Right Side Checkout -->
-        <div class="card shadow-sm p-4 rounded-4 w-100" style="max-width: 400px;">
+        <div class="card shadow-sm p-4  rounded-4 w-100" style="max-width: 400px;">
             <button wire:click="clear" class="btn btn-danger mb-3 w-100">
                 <i class="bi bi-trash"></i> Vider le panier
             </button>
-            <h5 class="fw-bold text-primary mb-3"><i class="bi bi-receipt-cutoff"></i> Order Summary</h5>
+            <h5 class="fw-bold text-primary mb-3"><i class="bi bi-receipt-cutoff"></i> Résumé de la commande</h5>
             <div class="d-flex justify-content-between mb-2">
                 <span>Subtotal ({{ count($cartItems) }} items):</span>
                 <span class="fw-semibold">{{$total}}</span>
@@ -126,7 +126,7 @@
                     value="fixed"
                     wire:model.live="typeDiscount"
                 >
-                <label class="form-check-label" for="fixedDiscount">Fixed</label>
+                <label class="form-check-label" for="fixedDiscount">Fixe</label>
             </div>
             
             <div class="form-check form-check-inline">
@@ -138,7 +138,7 @@
                     value="percentage"
                     wire:model.live="typeDiscount"
                 >
-                <label class="form-check-label" for="percentageDiscount">Percentage</label>
+                <label class="form-check-label" for="percentageDiscount">Pourcentage</label>
             </div>
 
             <hr>
