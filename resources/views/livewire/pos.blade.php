@@ -65,7 +65,7 @@
                                 <span class="category-tag">{{ $article->famille->famille }}</span>
                                 <img src="{{$article->photo }}" class="product-image" alt="{{ $article->designation }}">
                                 <h6 class="mt-3">{{ $article->designation }}</h6>
-                                <div class="price-tag">${{ number_format($article->prix_ht, 2) }}</div>
+                                <div class="price-tag">{{ number_format($article->prix_ht, 2) }} DH</div>
                                 <button wire:click='addToPanier({{ $article->id }})' class="btn btn-premium mt-3 w-100">Ajouter au panier</button>
                             </div>
                         </div>           
@@ -92,9 +92,9 @@
             <table class="table table-borderless table-sm">
                 <thead class="text-muted small">
                     <tr>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
+                        <th>Produit</th>
+                        <th>Prix</th>
+                        <th>Quantité</th>
                         <th>Total</th>
                     </tr>
                 </thead>
@@ -102,9 +102,9 @@
                     @foreach ($cartItems as $item)
                         <tr>
                             <td>{{ $item['name'] }}</td>
-                            <td>${{ number_format($item['price'], 2) }}</td>
+                            <td>{{ number_format($item['price'], 2) }}</td>
                             <td>{{ $item['quantity']}}</td>
-                            <td>${{ number_format($item['price'] * $item['quantity'], 2) }}</td>
+                            <td>{{ number_format($item['price'] * $item['quantity'], 2) }}</td>
                         </tr>
                     @endforeach
             
@@ -112,7 +112,7 @@
             </table>
 
             <hr>
-            <h6 class="fw-bold mb-2">Discount</h6>
+            <h6 class="fw-bold mb-2">Remise</h6>
             <div class="input-group mb-2">
                 <input type="number" wire:model.live='discount' class="form-control" placeholder="Discount value">
                 <span class="input-group-text">DH / %</span>
