@@ -118,7 +118,7 @@
             </div>
             <hr>
 
-            <h6 class="fw-bold mb-2">Product List</h6>
+            <h6 class="fw-bold mb-2">Liste des Produits</h6>
             <table class="table table-borderless table-sm">
                 <thead class="text-muted small">
                     <tr>
