@@ -6,11 +6,11 @@
             </a>
             <div class="d-flex align-items-center gap-4">
                 <div class="input-group mb-3 align-items-center">
-                    <input type="text" class="form-control" placeholder="Rechercher un produit..."
+                    <input type="text" wire:model.live.debounce.500ms="search" class="form-control" placeholder="Rechercher un produit..."
                         aria-label="Search Product" aria-describedby="button-addon2">
                     <button class="btn btn-outline-secondary" type="button" id="button-addon2"><i
                             class="bi bi-search"></i></button>
-                    <select id="client-select" class="form-select ms-2" style="max-width: 200px;">
+                    <select id="client-select" wire:model='client_id' class="form-select ms-2" style="max-width: 200px;">
                         <option value="">Sélectionner un client</option>
                         @foreach ($clients as $client)
                             <option value="{{ $client->id }}">{{ $client->name }}</option>   
@@ -42,20 +42,22 @@
             <div class="department-nav mb-4 mx-4">
                 <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-filter-circle nav-icon"></i>Shop Departments</h5>
                 <div class="d-flex flex-wrap gap-2">
-                    <a href="#" class="badge bg-primary text-white rounded-pill p-3 d-flex align-items-center">
+                    <button  wire:click='filterByFamille()' class="badge bg-primary text-white rounded-pill p-3 d-flex align-items-center">
                         <i class="bi bi-house-door me-2"></i>All
-                    </a>
+                    </button>
                     @foreach ($familles as $famille)
-                        <a href="#" class="badge bg-primary text-white rounded-pill p-3 d-flex align-items-center">
+                        <button wire:click='filterByFamille({{ $famille->id }})' class="badge bg-primary text-white rounded-pill p-3 d-flex align-items-center">
                             {{ $famille->famille }}
-                        </a>
+                        </button>
                     @endforeach
                 </div>
             </div>
 
             <!-- Product Cards Section -->
             <div class="product-grid mt-4 mx-2">
-                <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-box-seam nav-icon"></i> Nos Produits</h5>
+                @if($articles->isEmpty())
+                    <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-box-seam nav-icon"></i>Aucun produit trouvé.</h5>
+                @endif
                 <div class="row g-4">
                     @foreach ($articles as $article)
                         <div class="col-md-6 col-lg-4 col-xl-3">
