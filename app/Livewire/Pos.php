@@ -24,6 +24,22 @@ class Pos extends Component
     public $search = '';
     public $typeDiscount = 'fixed';
     public $discount = 0;
+    public $quantities = [];
+
+ 
+
+    public function updateCart($article_id, $quantity)
+    {
+        $cart = new Cart();
+        $cart->update($article_id, $quantity);
+        session()->flash('success', 'Quantité mise à jour !');
+    }
+    public function removeFromPanier($article_id)
+    {
+        $cart = new Cart();
+        $cart->remove($article_id);
+        session()->flash('success', 'Article supprimé du panier !');
+    }
 
     public function saveCart()
     {

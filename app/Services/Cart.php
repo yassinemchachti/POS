@@ -27,6 +27,20 @@ class Cart
         Session::put($this->cartKey, $cart);
     }
 
+    public function update($id, $quantity)
+    {
+        $cart = Session::get($this->cartKey, []);
+
+        if (isset($cart[$id])) {
+            if ($quantity <= 0) {
+                unset($cart[$id]);
+            } else {
+                $cart[$id]['quantity'] = $quantity;
+            }
+            Session::put($this->cartKey, $cart);
+        }
+    }
+
     public function remove($id)
     {
         $cart = Session::get($this->cartKey, []);
