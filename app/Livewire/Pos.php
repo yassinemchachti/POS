@@ -45,7 +45,7 @@ class Pos extends Component
 
     public function saveCart()
     {
-       
+
         $this->validate([
             'client_id' => 'required',
             'discount' => 'required|numeric|min:0',
