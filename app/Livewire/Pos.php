@@ -9,6 +9,7 @@ use App\Models\Famille;
 use App\Models\User;
 use App\Services\Cart;
 use Livewire\Attributes\Url;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -19,6 +20,7 @@ class Pos extends Component
     // #[WithPagination('articles')]
     #[Url(as: 'famille')]
     public $famille_id = null;
+    #[Validate('required', message: 'Veuillez choisir un client !')]
     public $client_id;
     #[Url()]
     public $search = '';
@@ -26,7 +28,7 @@ class Pos extends Component
     public $discount = 0;
     public $quantities = [];
 
- 
+
 
     public function updateCart($article_id, $quantity)
     {
@@ -43,8 +45,14 @@ class Pos extends Component
 
     public function saveCart()
     {
+       
+        $this->validate([
+            'client_id' => 'required',
+            'discount' => 'required|numeric|min:0',
+            'typeDiscount' => 'required|in:fixed,percentage',
+        ]);
         $cart = new Cart();
-        $remise=$this->typeDiscount=='percentage' ? round(($cart->total() * (floatval($this->discount) / 100))) :  $this->discount;
+        $remise = $this->typeDiscount == 'percentage' ? round(($cart->total() * (floatval($this->discount) / 100))) :  $this->discount;
         $commande = Commande::create([
             'user_id' => $this->client_id,
             'remise' => $remise,
@@ -52,7 +60,7 @@ class Pos extends Component
         ]);
         $cartItems = $cart->getCart();
         foreach ($cartItems as $item) {
-           DetailBL::create([
+            DetailBL::create([
                 'article_id' => $item['id'],
                 'commande_id' => $commande->id,
                 'qnt' => $item['quantity'],
@@ -67,7 +75,9 @@ class Pos extends Component
         $this->reset('typeDiscount');
         $this->reset('famille_id');
         $this->reset('search');
-        session()->flash('success', 'Commande enregistrée avec succès !');
+        $this->dispatch('show-success-alert', [
+            'message' => 'Commande enregistrée avec succès !',
+        ]);
     }
 
     public function addToPanier($article_id)
@@ -75,7 +85,6 @@ class Pos extends Component
         $article = Article::find($article_id);
         $cart = new Cart();
         $cart->add($article->id, $article->designation, $article->prix_ht);
-        session()->flash('success', 'Article ajouté au panier !');
     }
 
     public function clear()

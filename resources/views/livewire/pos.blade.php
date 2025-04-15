@@ -1,5 +1,21 @@
 <div>
-   
+    <!-- Include SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            window.addEventListener('show-success-alert', event => {
+                Swal.fire({
+                    icon: "success",
+                    title: event.detail[0].message,
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            });
+        });
+    </script>
+
 
     <nav class="navbar navbar-expand-lg navbar-dark py-3 mb-2">
         <div class="container">
@@ -19,7 +35,9 @@
                         @foreach ($clients as $client)
                             <option value="{{ $client->id }}">{{ $client->name }}</option>
                         @endforeach
+
                     </select>
+
                 </div>
                 {{-- <div class="dropdown">
                     <button class="btn btn-link text-white" type="button">
@@ -81,11 +99,15 @@
             </div>
         </div>
 
+
         <!-- Right Side Checkout -->
         <div class="card shadow-sm p-4  rounded-4 w-100" style="max-width: 400px;">
             <button wire:click="clear" class="btn btn-danger mb-3 w-100">
                 <i class="bi bi-trash"></i> Vider le panier
             </button>
+            @error('client_id')
+                <p class="text-danger mt-1">{{ $message }}</p>
+            @enderror
             <h5 class="fw-bold text-primary mb-3"><i class="bi bi-receipt-cutoff"></i> Résumé de la commande</h5>
             <div class="d-flex justify-content-between mb-2">
                 <span>Sous-total ({{ count($cartItems) }} articles) :</span>
@@ -111,9 +133,8 @@
                             <td>{{ $item['name'] }}</td>
                             <td>{{ number_format($item['price'], 2) }}</td>
                             <td>
-                                <input type="number" 
-                                value="{{ $item['quantity'] }}"
-                                    wire:change="updateCart({{ $item['id'] }}, $event.target.value)" min="1" 
+                                <input type="number" value="{{ $item['quantity'] }}"
+                                    wire:change="updateCart({{ $item['id'] }}, $event.target.value)" min="1"
                                     class="form-control form-control-sm" min="1">
                             </td>
                             <td>{{ number_format($item['price'] * $item['quantity'], 2) }}</td>
