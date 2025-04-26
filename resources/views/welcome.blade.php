@@ -12,7 +12,7 @@
             --primary-blue: #0A285F;
             --secondary-blue: #0077B6;
             --accent-gold: #FFC857;
-            --fresh-ice: #CAF0F8;
+            --fresh-ice: #f5f5f5;
         }
 
         body {

@@ -20,7 +20,7 @@ class Pos extends Component
     // #[WithPagination('articles')]
     #[Url(as: 'famille')]
     public $famille_id = null;
-    #[Validate('required', message: 'Veuillez choisir un client !')]
+    // #[Validate('required', message: 'Veuillez choisir un client !')]
     public $client_id;
     #[Url()]
     public $search = '';
@@ -45,7 +45,7 @@ class Pos extends Component
 
     public function saveCart()
     {
-
+       
         $this->validate([
             'client_id' => 'required',
             'discount' => 'required|numeric|min:0',

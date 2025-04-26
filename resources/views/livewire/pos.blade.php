@@ -2,7 +2,6 @@
     <!-- Include SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             window.addEventListener('show-success-alert', event => {
@@ -16,182 +15,212 @@
         });
     </script>
 
-
-    <nav class="navbar navbar-expand-lg navbar-dark py-3 mb-2">
+    <!-- Simple Navbar -->
+    <nav class="navbar navbar-expand-lg bg-light shadow-sm mb-3">
         <div class="container">
-            <a class="navbar-brand fw-bold fs-4" href="#">
-                <i class="bi bi-basket3-fill nav-icon"></i>BlueMart Pro
+            <a class="navbar-brand fw-bold text-primary" href="#">
+                <i class="bi bi-shop me-2"></i>POS System
             </a>
-            <div class="d-flex align-items-center gap-4">
-                <div class="input-group mb-3 align-items-center">
-                    <input type="text" wire:model.live.debounce.500ms="search" class="form-control"
-                        placeholder="Rechercher un produit..." aria-label="Search Product"
-                        aria-describedby="button-addon2">
-                    <button class="btn btn-outline-secondary" type="button" id="button-addon2"><i
-                            class="bi bi-search"></i></button>
-                    <select id="client-select" wire:model='client_id' class="form-select ms-2"
-                        style="max-width: 200px;">
-                        <option value="">Sélectionner un client</option>
-                        @foreach ($clients as $client)
-                            <option value="{{ $client->id }}">{{ $client->name }}</option>
-                        @endforeach
-
-                    </select>
-
-                </div>
-                {{-- <div class="dropdown">
-                    <button class="btn btn-link text-white" type="button">
-                        <i class="bi bi-person-circle nav-icon"></i>
+            <div class="d-flex align-items-center gap-2">
+                <div class="input-group">
+                    <input type="text" wire:model.live.debounce.500ms="search" class="form-control" 
+                        placeholder="Rechercher un produit...">
+                    <button class="btn btn-outline-secondary" type="button">
+                        <i class="bi bi-search"></i>
                     </button>
                 </div>
-                <div class="position-relative">
-                    <button class="btn btn-link text-white position-relative">
-                        <i class="bi bi-cart3 nav-icon"></i>
-                        <span
-                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">2</span>
-                    </button>
-                </div> --}}
+                <select id="client-select" wire:model='client_id' class="form-select" style="max-width: 200px;">
+                    <option value="">Sélectionner un client</option>
+                    @foreach ($clients as $client)
+                        <option value="{{ $client->id }}">{{ $client->name }}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
     </nav>
-    <div class="row g-4">
-        <div class="col-lg-9">
 
-            <div class="department-nav mb-4 mx-4">
-                <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-filter-circle nav-icon"></i>Familles</h5>
-                <div class="d-flex flex-wrap gap-2">
-                    <button wire:click='filterByFamille()'
-                        class="badge bg-primary text-white rounded-pill p-3 d-flex align-items-center">
-                        <i class="bi bi-house-door me-2"></i>All
-                    </button>
-                    @foreach ($familles as $famille)
-                        <button wire:click='filterByFamille({{ $famille->id }})'
-                            class="badge bg-primary text-white rounded-pill p-3 d-flex align-items-center">
-                            {{ $famille->famille }}
-                        </button>
-                    @endforeach
+    <div class="container">
+        <div class="row g-3">
+            <!-- Products Section -->
+            <div class="col-lg-8">
+                <!-- Simple Category Filter -->
+                <div class="card mb-3 border-0 rounded shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap gap-2">
+                            <button wire:click='filterByFamille()' 
+                                class="btn btn-sm btn-outline-secondary rounded-pill">
+                                Tous
+                            </button>
+                            @foreach ($familles as $famille)
+                                <button wire:click='filterByFamille({{ $famille->id }})' 
+                                    class="btn btn-sm btn-outline-secondary rounded-pill">
+                                    {{ $famille->famille }}
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Cards -->
+                <div class="mb-3">
+                    @if ($articles->isEmpty())
+                        <div class="alert alert-info">
+                            Aucun produit trouvé.
+                        </div>
+                    @endif
+                    <div class="row g-3">
+                        @foreach ($articles as $article)
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card h-100 product-card">
+                                    <span class="badge bg-secondary position-absolute end-0 m-2">
+                                        {{ $article->famille->famille }}
+                                    </span>
+                                    <img src="{{ $article->photo }}" class="card-img-top p-2" 
+                                        alt="{{ $article->designation }}" style="height: 160px; object-fit: contain;">
+                                    <div class="card-body d-flex flex-column">
+                                        <h6 class="card-title text-truncate">{{ $article->designation }}</h6>
+                                        <p class="card-text text-primary fw-bold mt-auto">{{ number_format($article->prix_ht, 2) }} DH</p>
+                                        <button wire:click='addToPanier({{ $article->id }})' 
+                                            class="btn btn-sm btn-outline-primary w-100">
+                                            <i class="bi bi-cart-plus"></i> Ajouter
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="mt-3">
+                        {{ $articles->links() }}
+                    </div>
                 </div>
             </div>
 
-            <!-- Product Cards Section -->
-            <div class="product-grid mt-4 mx-2">
-                @if ($articles->isEmpty())
-                    <h5 class="fw-bold mb-4 text-primary"><i class="bi bi-box-seam nav-icon"></i>Aucun produit trouvé.
-                    </h5>
-                @endif
-                <div class="row g-4">
-                    @foreach ($articles as $article)
-                        <div class="col-md-6 col-lg-4 col-xl-3">
-                            <div class="product-card p-3 text-center h-100">
-                                <span class="category-tag">{{ $article->famille->famille }}</span>
-                                <img src="{{ $article->photo }}" class="product-image"
-                                    alt="{{ $article->designation }}">
-                                <h6 class="mt-3">{{ $article->designation }}</h6>
-                                <div class="price-tag">{{ number_format($article->prix_ht, 2) }} DH</div>
-                                <button wire:click='addToPanier({{ $article->id }})'
-                                    class="btn btn-premium mt-3 w-100">Ajouter au panier</button>
+            <!-- Cart Section -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm sticky-top" style="top: 1rem;">
+                    <div class="card-header bg-light py-2">
+                        <h5 class="mb-0 text-secondary">
+                            <i class="bi bi-cart3 me-2"></i>Panier
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <button wire:click="clear" class="btn btn-sm btn-outline-danger mb-3">
+                            <i class="bi bi-trash"></i> Vider le panier
+                        </button>
+                        
+                        @error('client_id')
+                            <div class="alert alert-danger py-2 small">{{ $message }}</div>
+                        @enderror
+                        
+                        @session('error')
+                            <div class="alert alert-danger py-2 small">{{ session('error') }}</div>
+                        @endsession()
+                        
+                        <!-- Cart Items -->
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Produit</th>
+                                        <th>Prix</th>
+                                        <th>Qté</th>
+                                        <th>Total</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (empty($cartItems))
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted py-3 small">
+                                                Panier vide
+                                            </td>
+                                        </tr>
+                                    @endif
+                                    @foreach ($cartItems as $item)
+                                        <tr>
+                                            <td class="small">{{ $item['name'] }}</td>
+                                            <td>{{ number_format($item['price'], 2) }}</td>
+                                            <td>
+                                                <input type="number" value="{{ $item['quantity'] }}"
+                                                    wire:change="updateCart({{ $item['id'] }}, $event.target.value)" 
+                                                    min="1" class="form-control form-control-sm" style="width: 50px;">
+                                            </td>
+                                            <td>{{ number_format($item['price'] * $item['quantity'], 2) }}</td>
+                                            <td>
+                                                <button wire:click="removeFromPanier({{ $item['id'] }})"
+                                                    class="btn btn-sm text-danger border-0" aria-label="Remove item">
+                                                    <i class="bi bi-x"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Discount Section -->
+                        <div class="mt-2 mb-2">
+                            <div class="input-group input-group-sm mb-1">
+                                <input type="number" wire:model.live='discount' class="form-control" 
+                                    placeholder="Remise">
+                                <span class="input-group-text">DH / %</span>
+                            </div>
+                            <div class="form-check form-check-inline small">
+                                <input class="form-check-input" type="radio" name="discountType" 
+                                    id="fixedDiscount" value="fixed" wire:model.live="typeDiscount">
+                                <label class="form-check-label" for="fixedDiscount">Fixe</label>
+                            </div>
+                            <div class="form-check form-check-inline small">
+                                <input class="form-check-input" type="radio" name="discountType" 
+                                    id="percentageDiscount" value="percentage" wire:model.live="typeDiscount">
+                                <label class="form-check-label" for="percentageDiscount">%</label>
                             </div>
                         </div>
-                    @endforeach
 
-                    {{ $articles->links() }}
+                        <!-- Order Summary -->
+                        <div class="d-flex justify-content-between mt-3 mb-2">
+                            <span class="text-muted small">Sous-total ({{ count($cartItems) }} articles):</span>
+                            <span>{{ $total }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between fw-bold mb-3">
+                            <span>Total:</span>
+                            <span class="text-primary">{{ $totalWithDiscout }}</span>
+                        </div>
+                        <button wire:click="saveCart" class="btn btn-success w-100">
+                            <i class="bi bi-check-circle"></i> Confirmer la commande
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-
-
-        <!-- Right Side Checkout -->
-        <div class="card shadow-sm p-4  rounded-4 w-100" style="max-width: 400px;">
-            <button wire:click="clear" class="btn btn-danger mb-3 w-100">
-                <i class="bi bi-trash"></i> Vider le panier
-            </button>
-            @error('client_id')
-                <p class="text-danger mt-1">{{ $message }}</p>
-            @enderror
-            @session('error')
-            <p class="text-danger mt-1">{{ session('error') }}</p>
-            @endsession()
-            <h5 class="fw-bold text-primary mb-3"><i class="bi bi-receipt-cutoff"></i> Résumé de la commande</h5>
-            <div class="d-flex justify-content-between mb-2">
-                <span>Sous-total ({{ count($cartItems) }} articles) :</span>
-                <span class="fw-semibold">{{ $total }}</span>
-            </div>
-            <hr>
-
-            <h6 class="fw-bold mb-2">Liste des Produits</h6>
-            <table class="table table-borderless table-sm">
-                <thead class="text-muted small">
-                    <tr>
-                        <th>Produit</th>
-                        <th>Prix</th>
-                        <th>Quantité</th>
-                        <th>Total</th>
-                        <th>Action</th>
-                    </tr>
-
-                </thead>
-                <tbody class="small">
-                
-                       
-               
-                    @if (empty($cartItems))
-                        <tr>
-                            <td colspan="5" class="text-center">Aucun produit dans le panier.</td>
-                        </tr>
-                    @endif
-                    @foreach ($cartItems as $item)
-                        <tr>
-                            <td>{{ $item['name'] }}</td>
-                            <td>{{ number_format($item['price'], 2) }}</td>
-                            <td>
-                                <input type="number" value="{{ $item['quantity'] }}"
-                                    wire:change="updateCart({{ $item['id'] }}, $event.target.value)" min="1"
-                                    class="form-control form-control-sm" min="1">
-                            </td>
-                            <td>{{ number_format($item['price'] * $item['quantity'], 2) }}</td>
-                            <td>
-                                <button wire:click="removeFromPanier({{ $item['id'] }})"
-                                    class="btn btn-danger btn-sm" aria-label="Remove item">
-                                    <i class="bi bi-x" role="img" aria-hidden="true"></i>
-                                </button>
-                        </tr>
-                    @endforeach
-
-                </tbody>
-            </table>
-
-            <hr>
-            <h6 class="fw-bold mb-2">Remise</h6>
-            <div class="input-group mb-2">
-                <input type="number" wire:model.live='discount' class="form-control" placeholder="Discount value">
-                <span class="input-group-text">DH / %</span>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="discountType" id="fixedDiscount" value="fixed"
-                    wire:model.live="typeDiscount">
-                <label class="form-check-label" for="fixedDiscount">Fixe</label>
-            </div>
-
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="discountType" id="percentageDiscount"
-                    value="percentage" wire:model.live="typeDiscount">
-                <label class="form-check-label" for="percentageDiscount">Pourcentage</label>
-            </div>
-
-            <hr>
-            <div class="d-flex justify-content-between fw-bold fs-5">
-                <span>Total:</span>
-                <span class="text-primary">{{ $totalWithDiscout }}</span>
-            </div>
-            <div class="d-flex justify-content-end mt-4">
-                <button wire:click="saveCart" class="btn btn-success">
-                    <i class="bi bi-save"></i> Enregistrer
-                </button>
-            </div>
-        </div>
-
-
-
-
     </div>
+    
+<style>
+    .product-card {
+        transition: all 0.2s ease;
+        border: 1px solid rgba(0,0,0,.125);
+    }
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+        border-color: #dee2e6;
+    }
+    .pagination {
+        justify-content: center;
+    }
+    .pagination .page-link {
+        color: #6c757d;
+        border-radius: 0.25rem;
+        margin: 0 2px;
+    }
+    .pagination .page-item.active .page-link {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+</style>
 </div>
+
+
+
+
