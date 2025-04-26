@@ -73,7 +73,10 @@
                             <div class="col-md-6 col-lg-4">
                                 <div class="card h-100 product-card">
                                     <span class="badge bg-secondary position-absolute end-0 m-2">
-                                        {{ $article->famille->famille }}
+                                        @php
+                                            $stock = $article->stock - $article->DetailsBL->sum('qnt') ;
+                                        @endphp
+Stock: {{ $stock   }}
                                     </span>
                                     <img src="{{ $article->photo }}" class="card-img-top p-2" 
                                         alt="{{ $article->designation }}" style="height: 160px; object-fit: contain;">

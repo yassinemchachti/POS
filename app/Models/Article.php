@@ -36,5 +36,11 @@ class Article extends Model
     {
         return $this->belongsTo(Unite::class);
     }
+
+    
+    public function DetailsBL()
+    {
+        return $this->hasMany(DetailBL::class);
+    }
    
 }
